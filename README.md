@@ -44,7 +44,7 @@ Set ModClass = Nothing
 Thats all, you now have all the functions available in the Core.
 
 
-#### Core Function
+### Core Functions
 
 * Function toDateUniq
 [ Returns a unique current date with milliseconds for use in sql queries. Each function call produces a unique value ]
