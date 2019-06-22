@@ -1,18 +1,18 @@
 Option Explicit
 
-' Обязательная функция для иницилазации класса
+' РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РёРЅРёС†РёР»Р°Р·Р°С†РёРё РєР»Р°СЃСЃР°
 Public Function NewClass
     Set NewClass = New MetricCpu
 End Function
 
 Class MetricCpu
 
-    ' Название метрики
+    ' РќР°Р·РІР°РЅРёРµ РјРµС‚СЂРёРєРё
     Public Property Get Name
         Name = "cpu"
     End Property
 
-    ' Пересоздание схемы
+    ' РџРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃС…РµРјС‹
     Public Function RecreateTable(PgString)
         ModifyPgData " drop table if exists metric_cpu;                             " & _
                      " create table metric_cpu(id bigserial,                        " & _
@@ -27,7 +27,7 @@ Class MetricCpu
                      "                         LoadPercentage integer)              ", PgString
     End Function
 
-    ' Добавление свежих метрик
+    ' Р”РѕР±Р°РІР»РµРЅРёРµ СЃРІРµР¶РёС… РјРµС‚СЂРёРє
     Public Function InsertRows(HostName, Params, PgString, WmiString)
         Dim item, colItems, timestampNow
         
