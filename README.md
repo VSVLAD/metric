@@ -1,5 +1,5 @@
 # Metric
-This is agentless monitoring of Windows based systems. Used technologies such as WMI for accessing metric data and PostgreSQL database for storing results. For data visualization it is recommended to use the [[https://github.com/grafana/grafana|Grafana project]].
+This is agentless monitoring of Windows based systems. Used technologies such as WMI for accessing metric data and PostgreSQL database for storing results. For data visualization it is recommended to use the [[https://github.com/grafana/grafana]](Grafana project).
 
 
 ### How to run
