@@ -1,7 +1,7 @@
 Option Explicit
 
 
-' №№№№№№  Подключаем все модули  №№№№№№
+' в„–в„–в„–в„–в„–в„–  РџРѕРґРєР»СЋС‡Р°РµРј РІСЃРµ РјРѕРґСѓР»Рё  в„–в„–в„–в„–в„–в„–
 
 Dim ModuleList, ModClass
 Set ModuleList = CreateObject("Scripting.Dictionary")
@@ -29,42 +29,42 @@ If Not ModClass Is Nothing Then ModuleList.Add ModClass.Name, ModClass
 Set ModClass = Nothing
 
 
-' №№№№№№  Основные параметры  №№№№№№
+' в„–в„–в„–в„–в„–в„–  РћСЃРЅРѕРІРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹  в„–в„–в„–в„–в„–в„–
 
-' Строка соединения с PostgreSQL
+' РЎС‚СЂРѕРєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ PostgreSQL
 Dim PgString: PgString = "Provider=MSDASQL.1;Persist Security Info=False;Extended Properties=""DSN=PostgreSQL35W;DATABASE=YOUR_DATABASE;SERVER=localhost;PORT=5432;UID=postgres;Password=YOUR_PASSWORD;SSLmode=disable;ReadOnly=0;Protocol=7.4;FakeOidIndex=0;ShowOidColumn=0;RowVersioning=0;ShowSystemTables=0;Fetch=100;UnknownSizes=0;MaxVarcharSize=255;MaxLongVarcharSize=8190;Debug=0;CommLog=0;UseDeclareFetch=0;TextAsLongVarchar=1;UnknownsAsLongVarchar=0;BoolsAsChar=1;Parse=0;ExtraSysTablePrefixes=;LFConversion=1;UpdatableCursors=1;TrueIsMinus1=0;BI=0;ByteaAsLongVarBinary=1;UseServerSidePrepare=1;LowerCaseIdentifier=0;D6=-101;XaOpt=1"""
 
-' Строка соединения с WMI
+' РЎС‚СЂРѕРєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ WMI
 Dim WmiString: WmiString = "winmgmts:\\%host_name%\root\CIMV2"
 
-' Время отдыха, перед следующей итерацией
+' Р’СЂРµРјСЏ РѕС‚РґС‹С…Р°, РїРµСЂРµРґ СЃР»РµРґСѓСЋС‰РµР№ РёС‚РµСЂР°С†РёРµР№
 Dim timeOutSleep: timeOutSleep = 5000
 
-' Список переданных параметров
+' РЎРїРёСЃРѕРє РїРµСЂРµРґР°РЅРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
 Dim colArgs: Set colArgs = SelectTaskParameters
 
-' Проверка на хост WSH
+' РџСЂРѕРІРµСЂРєР° РЅР° С…РѕСЃС‚ WSH
 If Instr(1, LCase(WScript.FullName), "wscript.exe") >= 1 Then
-    LogMessage "Используйте CScript для сбора метрик, вместо WScript. " & vbCrLf & _
-               "Пример вызова: cscript ""metric.vbs"" /task:collect /metric:cpu /host:%local%"
+    LogMessage "РСЃРїРѕР»СЊР·СѓР№С‚Рµ CScript РґР»СЏ СЃР±РѕСЂР° РјРµС‚СЂРёРє, РІРјРµСЃС‚Рѕ WScript. " & vbCrLf & _
+               "РџСЂРёРјРµСЂ РІС‹Р·РѕРІР°: cscript ""metric.vbs"" /task:collect /metric:cpu /host:%local%"
     WScript.Quit
 End If
 
 
-' №№№№№№  Выполнение задач  №№№№№№
+' в„–в„–в„–в„–в„–в„–  Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РґР°С‡  в„–в„–в„–в„–в„–в„–
 
 Select Case colArgs("task")
     Case "collect"
 
-        ' Проверка на корректную задачу
+        ' РџСЂРѕРІРµСЂРєР° РЅР° РєРѕСЂСЂРµРєС‚РЅСѓСЋ Р·Р°РґР°С‡Сѓ
         If colArgs("metric") = "" Or Instr(1, colArgs("metric"), "%") >= 1 Then
-            LogMessage "Не указана метрика, которую нужно собирать! Правильное название метрики нужно передать в параметрах командной строки"
+            LogMessage "РќРµ СѓРєР°Р·Р°РЅР° РјРµС‚СЂРёРєР°, РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ СЃРѕР±РёСЂР°С‚СЊ! РџСЂР°РІРёР»СЊРЅРѕРµ РЅР°Р·РІР°РЅРёРµ РјРµС‚СЂРёРєРё РЅСѓР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РІ РїР°СЂР°РјРµС‚СЂР°С… РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё"
             WScript.Quit
         End If
 
-        LogMessage "Начинаем сбор метрик [" & colArgs("metric") & ", " & colArgs("host") & "]"
+        LogMessage "РќР°С‡РёРЅР°РµРј СЃР±РѕСЂ РјРµС‚СЂРёРє [" & colArgs("metric") & ", " & colArgs("host") & "]"
 
-        ' Рабочий цикл
+        ' Р Р°Р±РѕС‡РёР№ С†РёРєР»
         Do While True
             Call CollectMetric(colArgs("host"), colArgs("metric"), PgString, WmiString)
             Call WScript.Sleep(timeOutSleep)
@@ -72,25 +72,25 @@ Select Case colArgs("task")
 
     Case "reinstall"
 
-        ' Пересоздание таблиц правил и модулей метрик
+        ' РџРµСЂРµСЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС† РїСЂР°РІРёР» Рё РјРѕРґСѓР»РµР№ РјРµС‚СЂРёРє
         Call ReinstallMetricRule(PgString)
 
-        LogMessage "Выполнено пересоздание схемы правил метрик"
+        LogMessage "Р’С‹РїРѕР»РЅРµРЅРѕ РїРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃС…РµРјС‹ РїСЂР°РІРёР» РјРµС‚СЂРёРє"
 
         Dim moduleName
         For Each moduleName In ModuleList
             ModuleList(moduleName).RecreateTable(PgString)
-            LogMessage "Выполнено пересоздание схемы для модуля: " & ModuleList(moduleName).Name
+            LogMessage "Р’С‹РїРѕР»РЅРµРЅРѕ РїРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃС…РµРјС‹ РґР»СЏ РјРѕРґСѓР»СЏ: " & ModuleList(moduleName).Name
         Next
 
     Case Else
 
-        LogMessage "Не указана правильная задача! Примеры задач: collect, reinstall"
+        LogMessage "РќРµ СѓРєР°Р·Р°РЅР° РїСЂР°РІРёР»СЊРЅР°СЏ Р·Р°РґР°С‡Р°! РџСЂРёРјРµСЂС‹ Р·Р°РґР°С‡: collect, reinstall"
 
 End Select
 
 
-' Процедура сбора метрик
+' РџСЂРѕС†РµРґСѓСЂР° СЃР±РѕСЂР° РјРµС‚СЂРёРє
 Public Sub CollectMetric(HostName, MetricName, PgString, WmiString)
     Dim pg_delete_metrics, pg_select_metrics, resMetrics, idx, lastTimer
 
@@ -115,30 +115,30 @@ Public Sub CollectMetric(HostName, MetricName, PgString, WmiString)
                     "   and mr.metric_name = '%metric_name%'                                                        " & _
                     "   and mr.host_name like '%host_name%'                                                         ", "%metric_name%", MetricName), "%host_name%", HostName)
 
-    ' Удаляем старые метрики согласно правил
+    ' РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Рµ РјРµС‚СЂРёРєРё СЃРѕРіР»Р°СЃРЅРѕ РїСЂР°РІРёР»
     Call ModifyPgData(pg_delete_metrics, PgString)
 
-    ' Находим метрики, которые нуждаются в обновлении
+    ' РќР°С…РѕРґРёРј РјРµС‚СЂРёРєРё, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РґР°СЋС‚СЃСЏ РІ РѕР±РЅРѕРІР»РµРЅРёРё
     resMetrics = SelectPgData(pg_select_metrics, PgString)
 
     If UBound(resMetrics) > 0 Then
         Dim localHostName, localMetricName, localParams, localWmiString
         For idx = 0 To UBound(resMetrics, 2)
 
-            ' Заполняем текущие переменные
+            ' Р—Р°РїРѕР»РЅСЏРµРј С‚РµРєСѓС‰РёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
             localHostName   = resMetrics(0, idx)
             localMetricName = resMetrics(1, idx)
             localParams     = resMetrics(2, idx)
             localWmiString  = Replace(WmiString, "%host_name%", localHostName)
 
-            ' Выполняем обработчик конкретной метрики
+            ' Р’С‹РїРѕР»РЅСЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРЅРєСЂРµС‚РЅРѕР№ РјРµС‚СЂРёРєРё
             If ModuleList.Exists(localMetricName) Then
                 lastTimer = Timer
                 Call ModuleList(MetricName).InsertRows(localHostName, localParams, PgString, localWmiString)
 
-                Call LogMessage("Метрики [" & localHostName & ", " & localMetricName & "] обновлены за " & Round(Timer - lastTimer, 2) & " сек")
+                Call LogMessage("РњРµС‚СЂРёРєРё [" & localHostName & ", " & localMetricName & "] РѕР±РЅРѕРІР»РµРЅС‹ Р·Р° " & Round(Timer - lastTimer, 2) & " СЃРµРє")
             Else
-                Call LogMessage("Метрика [" & localHostName & ", " & localMetricName & "] не обновлена. Неизвестный модуль")
+                Call LogMessage("РњРµС‚СЂРёРєР° [" & localHostName & ", " & localMetricName & "] РЅРµ РѕР±РЅРѕРІР»РµРЅР°. РќРµРёР·РІРµСЃС‚РЅС‹Р№ РјРѕРґСѓР»СЊ")
             End If
         Next
     End If
@@ -146,7 +146,7 @@ End Sub
 
 
 
-' Логирование событий
+' Р›РѕРіРёСЂРѕРІР°РЅРёРµ СЃРѕР±С‹С‚РёР№
 Public Function LogMessage(Message)
     Dim lastErrNumber, lastErrDescription
     lastErrNumber = Err.Number
@@ -169,7 +169,7 @@ Public Function LogMessage(Message)
     objFile.Close
 End Function
 
-' Функция включения скриптов
+' Р¤СѓРЅРєС†РёСЏ РІРєР»СЋС‡РµРЅРёСЏ СЃРєСЂРёРїС‚РѕРІ
 Public Function IncludeModule(FilePath)
     On Error Resume Next
 
