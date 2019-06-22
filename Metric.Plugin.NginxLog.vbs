@@ -1,19 +1,19 @@
 Option Explicit
 
 
-' Обязательная функция для иницилазации класса
+' РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РёРЅРёС†РёР»Р°Р·Р°С†РёРё РєР»Р°СЃСЃР°
 Public Function NewClass
     Set NewClass = New MetricNginxLog
 End Function
 
 Class MetricNginxLog
 
-    ' Название метрики
+    ' РќР°Р·РІР°РЅРёРµ РјРµС‚СЂРёРєРё
     Public Property Get Name
         Name = "nginxlog"
     End Property
 
-    ' Пересоздание схемы
+    ' РџРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃС…РµРјС‹
     Public Function RecreateTable(PgString)
         ModifyPgData " drop table if exists metric_nginxlog;                            " & _
                      " create table metric_nginxlog(id bigserial,                       " & _
@@ -31,12 +31,12 @@ Class MetricNginxLog
                      "                             UserAgent varchar(500))              ", PgString
     End Function
 
-    ' Добавление свежих метрик
+    ' Р”РѕР±Р°РІР»РµРЅРёРµ СЃРІРµР¶РёС… РјРµС‚СЂРёРє
     Public Function InsertRows(HostName, Params, PgString, WmiString)
         Dim timestampNow
         timestampNow = toDate(Now)
 
-        ' По всем файлам из параметра
+        ' РџРѕ РІСЃРµРј С„Р°Р№Р»Р°Рј РёР· РїР°СЂР°РјРµС‚СЂР°
         Dim fileLog
         For Each fileLog In Split(Params, "|")
 
@@ -44,33 +44,33 @@ Class MetricNginxLog
             Set fso = CreateObject("Scripting.FileSystemObject")
             If fso.FileExists(fileLog) Then
 
-                LogMessage "::Metric.Plugin.NginxLog fileLog=[" & fileLog & "] выполняется обработка..."
+                LogMessage "::Metric.Plugin.NginxLog fileLog=[" & fileLog & "] РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±СЂР°Р±РѕС‚РєР°..."
                 Set tsFile = fso.OpenTextFile(fileLog, 1, False, 0)  ' 0 - ascii, 1 - unicode
 
-                ' Создаём объект для регулярного выражения
+                ' РЎРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚ РґР»СЏ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
                 Dim regExp, regMatches, regSubMatches, lineDate
                 Set regExp = CreateObject("VBScript.RegExp")
                 regExp.Pattern = "(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] ""(\S+)\s?(\S+)?\s?(\S+)?"" (\d{3}|-) (\d+|-)\s?""?([^""]*)""?\s?""?([^""]*)?""?"
                 regExp.Global = True
                 regExp.IgnoreCase = True
                 
-                ' Находим последние изменения в базе
+                ' РќР°С…РѕРґРёРј РїРѕСЃР»РµРґРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ РІ Р±Р°Р·Рµ
                 Dim lastRequestDate
                 lastRequestDate = SelectPgData("select coalesce(max(RequestDate), '2000-01-01') as max_date from metric_nginxlog where FilePath = " & ToStr(fileLog), PgString)(0, 0)
                 lastRequestDate = CDate(lastRequestDate)
 
-                ' Открываем траназакцию
+                ' РћС‚РєСЂС‹РІР°РµРј С‚СЂР°РЅР°Р·Р°РєС†РёСЋ
                 Dim transactConnect
                 Set transactConnect = OpenPgConnection(PgString)
                 ExecuteOnPgConnection "begin transaction", transactConnect
 
-                ' По всем строкам проходимся регуляркой
+                ' РџРѕ РІСЃРµРј СЃС‚СЂРѕРєР°Рј РїСЂРѕС…РѕРґРёРјСЃСЏ СЂРµРіСѓР»СЏСЂРєРѕР№
                 On Error Resume Next
                 Do While Not tsFile.AtEndOfStream
                     Set regMatches = regExp.Execute(tsFile.ReadLine)
                     Set regSubMatches = regMatches(0).SubMatches
                     
-                    'Находим последние изменения в логе
+                    'РќР°С…РѕРґРёРј РїРѕСЃР»РµРґРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ РІ Р»РѕРіРµ
                     lineDate = CDate(ToDateConvert(regSubMatches(3)))
                     If lineDate > lastRequestDate Then
 
@@ -99,13 +99,13 @@ Class MetricNginxLog
                 ExecuteOnPgConnection "commit", transactConnect
                 transactConnect.Close
             Else
-                LogMessage "::Metric.Plugin.NginxLog fileLog=[" & fileLog & "] не найден! Пропуск файла"
+                LogMessage "::Metric.Plugin.NginxLog fileLog=[" & fileLog & "] РЅРµ РЅР°Р№РґРµРЅ! РџСЂРѕРїСѓСЃРє С„Р°Р№Р»Р°"
             End If
         Next
     End Function
 
 
-    ' Конвертирует формат даты из 01/Jan/2000:12:00:00 в 2000-01-01 12:00:00
+    ' РљРѕРЅРІРµСЂС‚РёСЂСѓРµС‚ С„РѕСЂРјР°С‚ РґР°С‚С‹ РёР· 01/Jan/2000:12:00:00 РІ 2000-01-01 12:00:00
     Private Function ToDateConvert(Value)
         Dim arr, arr2
 
