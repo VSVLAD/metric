@@ -1,18 +1,18 @@
 Option Explicit
 
-' Обязательная функция для иницилазации класса
+' РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РёРЅРёС†РёР»Р°Р·Р°С†РёРё РєР»Р°СЃСЃР°
 Public Function NewClass
     Set NewClass = New MetricDisk
 End Function
 
 Class MetricDisk
 
-    ' Название метрики
+    ' РќР°Р·РІР°РЅРёРµ РјРµС‚СЂРёРєРё
     Public Property Get Name
         Name = "disk"
     End Property
     
-    ' Пересоздание схемы
+    ' РџРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃС…РµРјС‹
     Public Function RecreateTable(PgString)
         ModifyPgData " drop table if exists metric_disk;                             " & _
                      " create table metric_disk(id bigserial,                        " & _
@@ -28,7 +28,7 @@ Class MetricDisk
                      
     End Function
 
-    ' Добавление свежих метрик
+    ' Р”РѕР±Р°РІР»РµРЅРёРµ СЃРІРµР¶РёС… РјРµС‚СЂРёРє
     Public Function InsertRows(HostName, Params, PgString, WmiString)
         Dim item, colItems, timestampNow
 
