@@ -14,7 +14,7 @@ collect - run infinite loop for monitoring metrics
 reinstall - recreate all tables for storage metric data
 
 * /metric
-You write name of metric. App instance will monitoring only one metric. List of metric names you find in files, which contains substring "plugin". This is class file of VBScript, which impements interface for collect and write metric data.
+You write name of metric. App instance will monitoring only one metric. List of metric names you find in files, which contains substring "plugin". This is class file of VBScript, which implements interface for collect and write metric data.
 
 * /host
 This parameter is optional and filtering host name in table rules. You can write name with wildcard chars. Only suitable for host name filter will be used to poll metrics.
