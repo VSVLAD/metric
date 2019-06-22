@@ -1,29 +1,29 @@
 Option Explicit
 
 
-' Обязательная функция для иницилазации класса
+' РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РёРЅРёС†РёР»Р°Р·Р°С†РёРё РєР»Р°СЃСЃР°
 Public Function NewClass
     Set NewClass = Nothing
 End Function
 
-' Пересоздаём схему данных для правил метрик
+' РџРµСЂРµСЃРѕР·РґР°С‘Рј СЃС…РµРјСѓ РґР°РЅРЅС‹С… РґР»СЏ РїСЂР°РІРёР» РјРµС‚СЂРёРє
 Public Sub ReinstallMetricRule(PgString)
-	ModifyPgData " drop table if exists metric_rule;                                                 " & _
-                 " create table metric_rule (	                                                     " & _
-				 "    host_name   varchar(50) not null,	                                             " & _
-				 "    metric_name varchar(50) not null,	                                             " & _
-                 "    params      text null,	                                                     " & _
-				 "    life_time   integer default 86400,		                                     " & _
-				 "    period      integer default 60			                                     " & _
-				 " );							                                                     " & _
-	             " create unique index idx_mrule_host_metric on metric_rule(host_name, metric_name); " & _
-                 " insert into metric_rule values('localhost', 'cpu', null, '86400', '5'), 	         " & _
-				 "								 ('localhost', 'disk', null, '86400', '30'),	     " & _
-                 "								 ('localhost', 'service', null, '86400', '30'),      " & _
-                 "								 ('localhost', 'process', null, '86400', '15');      ", PgString
+	ModifyPgData " drop table if exists metric_rule;                                             				     " & _
+                " create table metric_rule (	                                                     				     " & _
+		"    host_name   varchar(50) not null,	                                             				     " & _
+		"    metric_name varchar(50) not null,	                                             				     " & _
+                "    params      text null,	                                                     				     " & _
+		"    life_time   integer default 86400,		                                     				     " & _
+		"    period      integer default 60			                             				     " & _
+		" );							                             				     " & _
+		" create unique index idx_mrule_host_metric on metric_rule(host_name, metric_name);  				     " & _
+                " insert into metric_rule values('localhost', 'cpu', null, '86400', '5'), 	         			     " & _
+		"								 ('localhost', 'disk', null, '86400', '30'),	     " & _
+                "								 ('localhost', 'service', null, '86400', '30'),      " & _
+                "								 ('localhost', 'process', null, '86400', '15');      ", PgString
 End Sub
 
-' Возвращает текущую дату с милисекундами, уникальная на каждый вызов
+' Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰СѓСЋ РґР°С‚Сѓ СЃ РјРёР»РёСЃРµРєСѓРЅРґР°РјРё, СѓРЅРёРєР°Р»СЊРЅР°СЏ РЅР° РєР°Р¶РґС‹Р№ РІС‹Р·РѕРІ
 Public Function toDateUniq
     Dim Milliseconds, Seconds, Minutes, Hours
     Dim tmr, temp, strTime
@@ -42,16 +42,16 @@ Public Function toDateUniq
     strTime = strTime & Right("0"    & Seconds, 2)      & "."
     strTime = strTime & Right("0000" & Milliseconds, 4)
 	
-	' Немного ожидания для уникальности
-	Do While Timer = tmr
-	Loop
+	' РќРµРјРЅРѕРіРѕ РѕР¶РёРґР°РЅРёСЏ РґР»СЏ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё
+    Do While Timer = tmr
+    Loop
 	
     toDateUniq = Year(Now) 	  & "-" & _
            Right("0" & Month(Now), 2) & "-" & _
            Right("0" & Day(Now), 2)   & " " & strTime
 End Function
 
-' Возвращает дату по формату YYYY-MM-DD HH:mm:ss
+' Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РїРѕ С„РѕСЂРјР°С‚Сѓ YYYY-MM-DD HH:mm:ss
 Public Function toDate(Value)
     If Not IsNull(Value) Then
         toDate = Year(Value) 	          & "-" & _
@@ -65,7 +65,7 @@ Public Function toDate(Value)
     End If
 End Function
 
-' Возвращает строку для вставки в запросы SQL
+' Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РґР»СЏ РІСЃС‚Р°РІРєРё РІ Р·Р°РїСЂРѕСЃС‹ SQL
 Public Function toStr(Value)
     If Not IsNull(Value) Then
         toStr = "'" & Replace(Value, "'", "''") & "'"
@@ -74,7 +74,7 @@ Public Function toStr(Value)
     End If
 End Function
 
-' Возвращает число для вставки в запросы SQL
+' Р’РѕР·РІСЂР°С‰Р°РµС‚ С‡РёСЃР»Рѕ РґР»СЏ РІСЃС‚Р°РІРєРё РІ Р·Р°РїСЂРѕСЃС‹ SQL
 Public Function toReal(Value)
     If Not IsNull(Value) Then
         toReal = Replace(Value, ",", ".")
@@ -83,7 +83,7 @@ Public Function toReal(Value)
     End If
 End Function
 
-' Читаем из Postgres
+' Р§РёС‚Р°РµРј РёР· Postgres
 Public Function SelectPgData(Query, ConnectString)
     On Error Resume Next
 
@@ -106,7 +106,7 @@ Public Function SelectPgData(Query, ConnectString)
     On Error GoTo 0
 End Function
 
-'Добавляем, изменяем, удаляем в Postgres
+'Р”РѕР±Р°РІР»СЏРµРј, РёР·РјРµРЅСЏРµРј, СѓРґР°Р»СЏРµРј РІ Postgres
 Public Function ModifyPgData(Query, ConnectString)
     On Error Resume Next
 
@@ -121,7 +121,7 @@ Public Function ModifyPgData(Query, ConnectString)
     On Error GoTo 0
 End Function
 
-' Открываем соединение Postgres для ручного управления транзакцией
+' РћС‚РєСЂС‹РІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ Postgres РґР»СЏ СЂСѓС‡РЅРѕРіРѕ СѓРїСЂР°РІР»РµРЅРёСЏ С‚СЂР°РЅР·Р°РєС†РёРµР№
 Public Function OpenPgConnection(ConnectString)
     On Error Resume Next
 
@@ -135,7 +135,7 @@ Public Function OpenPgConnection(ConnectString)
     On Error GoTo 0
 End Function
 
-' Открываем соединение Postgres для ручного управления транзакцией
+' РћС‚РєСЂС‹РІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ Postgres РґР»СЏ СЂСѓС‡РЅРѕРіРѕ СѓРїСЂР°РІР»РµРЅРёСЏ С‚СЂР°РЅР·Р°РєС†РёРµР№
 Public Function ExecuteOnPgConnection(Query, ConnectionObject)
     On Error Resume Next
     
@@ -145,7 +145,7 @@ Public Function ExecuteOnPgConnection(Query, ConnectionObject)
     On Error GoTo 0
 End Function
 
-' Читаем из WMI
+' Р§РёС‚Р°РµРј РёР· WMI
 Public Function SelectWmiData(Query, ConnectString)
     On Error Resume Next
 
@@ -153,17 +153,17 @@ Public Function SelectWmiData(Query, ConnectString)
     Set objWMIService = GetObject(ConnectString)
     Set colItems = objWMIService.ExecQuery(Query, , 48)
     
-    ' Массив содержит элементы с типом "Словарь"
+    ' РњР°СЃСЃРёРІ СЃРѕРґРµСЂР¶РёС‚ СЌР»РµРјРµРЅС‚С‹ СЃ С‚РёРїРѕРј "РЎР»РѕРІР°СЂСЊ"
     Dim resultArr
     resultArr = Array()
     
     For Each objItem In colItems
     
-        'Словарь для текущей итерации
+        'РЎР»РѕРІР°СЂСЊ РґР»СЏ С‚РµРєСѓС‰РµР№ РёС‚РµСЂР°С†РёРё
         Dim resultDict
         Set resultDict = CreateObject("Scripting.Dictionary")
         
-        ' Увеличиваем массив на единицу, сохраняя предыдущие ссылки
+        ' РЈРІРµР»РёС‡РёРІР°РµРј РјР°СЃСЃРёРІ РЅР° РµРґРёРЅРёС†Сѓ, СЃРѕС…СЂР°РЅСЏСЏ РїСЂРµРґС‹РґСѓС‰РёРµ СЃСЃС‹Р»РєРё
         ReDim Preserve resultArr(UBound(resultArr) + 1)
         Set resultArr(UBound(resultArr)) = resultDict
         
@@ -178,7 +178,7 @@ Public Function SelectWmiData(Query, ConnectString)
     On Error GoTo 0
 End Function
 
-' Возвращает коллекцию параметров из коммандной строки [task, host, metric]
+' Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»Р»РµРєС†РёСЋ РїР°СЂР°РјРµС‚СЂРѕРІ РёР· РєРѕРјРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё [task, host, metric]
 Public Function SelectTaskParameters
     On Error Resume Next
     Dim resultDict, argNames
